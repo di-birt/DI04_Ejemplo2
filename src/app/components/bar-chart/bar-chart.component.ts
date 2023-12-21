@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
 
 @Component({
@@ -10,6 +10,8 @@ export class BarChartComponent implements OnInit {
  
   // Atributo que almacena los datos del chart
   public chart!: Chart;
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
  
   ngOnInit(): void {
     console.log("Ejecuta bar-chart")
@@ -19,9 +21,10 @@ export class BarChartComponent implements OnInit {
     this.destroyChart();
   }
 
-  private inicializarChart(){
+  private inicializarChart() {
     // Destruir el gráfico existente si existe
     this.destroyChart();
+  
     // datos
     const data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -50,9 +53,17 @@ export class BarChartComponent implements OnInit {
         tension: 0.1
       }]
     };
+  
     // Creamos la gráfica
-    this.chart = new Chart("barChart", {
-      type: 'bar' as ChartType, // tipo de la gráfica 
+    const canvas = this.renderer.createElement('canvas');
+    this.renderer.setAttribute(canvas, 'id', 'barChart');
+  
+    // Añadimos el canvas al div con id "chartContainer"
+    const container = this.el.nativeElement.querySelector('#contenedor-chart');
+    this.renderer.appendChild(container, canvas);
+  
+    this.chart = new Chart(canvas, {
+      type: 'bar', // tipo de la gráfica 
       data: data, // datos 
       options: { // opciones de la gráfica
         responsive: true,
@@ -75,6 +86,7 @@ export class BarChartComponent implements OnInit {
         },
       }
     });
+  
     this.chart.canvas.width = 100;
     this.chart.canvas.height = 100;
   }
