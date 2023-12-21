@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
 
 @Component({
@@ -59,11 +59,11 @@ export class BarChartComponent implements OnInit {
     this.renderer.setAttribute(canvas, 'id', 'barChart');
   
     // Añadimos el canvas al div con id "chartContainer"
-    const container = this.el.nativeElement.querySelector('#contenedor-chart');
+    const container = this.el.nativeElement.querySelector('#contenedor-barchart');
     this.renderer.appendChild(container, canvas);
   
     this.chart = new Chart(canvas, {
-      type: 'bar', // tipo de la gráfica 
+      type: 'bar' as ChartType, // tipo de la gráfica 
       data: data, // datos 
       options: { // opciones de la gráfica
         responsive: true,
