@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, Input } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
 
 @Component({
@@ -8,6 +8,7 @@ import { Chart, ChartType } from 'chart.js/auto';
 })
 export class BarChartComponent implements OnInit {
  
+  @Input() nameTab: string = "";
   // Atributo que almacena los datos del chart
   public chart!: Chart;
 
@@ -17,14 +18,8 @@ export class BarChartComponent implements OnInit {
     console.log("Ejecuta bar-chart")
     this.inicializarChart();
   }
-  ngOnDestroy() {
-    this.destroyChart();
-  }
 
   private inicializarChart() {
-    // Destruir el gráfico existente si existe
-    this.destroyChart();
-  
     // datos
     const data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -54,13 +49,26 @@ export class BarChartComponent implements OnInit {
       }]
     };
   
+    const div = this.renderer.createElement('div');
+    // Establecer alguna propiedad del div si es necesario
+    this.renderer.setStyle(div, 'width', '100%');
+    this.renderer.setStyle(div, 'height', '100%');
+    this.renderer.setStyle(div, 'margin', 'auto');
+    this.renderer.setStyle(div, 'text-align', 'center');
+    this.renderer.setAttribute(div, 'id', 'container'+this.nameTab+'BarChart');
+
     // Creamos la gráfica
     const canvas = this.renderer.createElement('canvas');
-    this.renderer.setAttribute(canvas, 'id', 'barChart');
+    this.renderer.setAttribute(canvas, 'id', this.nameTab+'BarChart');
+
+    // Agregar el canvas al div
+    this.renderer.appendChild(div, canvas);
+    // Agregar el div al elemento actual del componente
+    this.renderer.appendChild(this.el.nativeElement, div);
   
     // Añadimos el canvas al div con id "chartContainer"
-    const container = this.el.nativeElement.querySelector('#contenedor-barchart');
-    this.renderer.appendChild(container, canvas);
+    //const container = this.el.nativeElement.querySelector('#contenedor-barchart');
+    //this.renderer.appendChild(container, canvas);
   
     this.chart = new Chart(canvas, {
       type: 'bar' as ChartType, // tipo de la gráfica 
@@ -89,12 +97,5 @@ export class BarChartComponent implements OnInit {
   
     this.chart.canvas.width = 100;
     this.chart.canvas.height = 100;
-  }
-
-  private destroyChart() {
-    // Destruir el gráfico si existe
-    if (this.chart) {
-      this.chart.destroy();
-    }
   }
 }

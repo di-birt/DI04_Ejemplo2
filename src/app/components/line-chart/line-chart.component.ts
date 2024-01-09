@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, Input } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
  
 @Component({
@@ -8,6 +8,7 @@ import { Chart, ChartType } from 'chart.js/auto';
 })
 export class LineChartComponent implements OnInit {
  
+  @Input() nameTab: string = "";
   // Atributo que almacena los datos del chart
   public chart!: Chart;
  
@@ -17,13 +18,8 @@ export class LineChartComponent implements OnInit {
     console.log("Ejecuta line-chart")
     this.inicializarChart();
   }
-  ngOnDestroy() {
-    this.destroyChart();
-  }
 
   private inicializarChart(){
-    // Destruir el gráfico existente si existe
-    this.destroyChart();
     // datos
     const data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -38,7 +34,7 @@ export class LineChartComponent implements OnInit {
 
     // Creamos la gráfica
     const canvas = this.renderer.createElement('canvas');
-    this.renderer.setAttribute(canvas, 'id', 'lineChart');
+    this.renderer.setAttribute(canvas, 'id', this.nameTab+'LineChart');
   
     // Añadimos el canvas al div con id "chartContainer"
     const container = this.el.nativeElement.querySelector('#contenedor-linechart');
@@ -71,12 +67,5 @@ export class LineChartComponent implements OnInit {
     });
     this.chart.canvas.width = 100;
     this.chart.canvas.height = 100;
-  }
-
-  private destroyChart() {
-    // Destruir el gráfico si existe
-    if (this.chart) {
-      this.chart.destroy();
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, Input } from '@angular/core';
 // Necesitamos importar Chart desde chart.js
 import { Chart, ChartType } from 'chart.js/auto';
  
@@ -9,6 +9,7 @@ import { Chart, ChartType } from 'chart.js/auto';
 })
 export class PieChartComponent implements OnInit {
  
+  @Input() nameTab: string = "";
   // Atributo que almacena los datos del chart
   public chart: any;
 
@@ -17,13 +18,8 @@ export class PieChartComponent implements OnInit {
   ngOnInit(): void {
       this.inicializarChart();
   }
-  ngOnDestroy() {
-    this.destroyChart();
-  }
 
   private inicializarChart(){
-    // Destruir el gráfico existente si existe
-    this.destroyChart();
     
     const data = {
       labels: [
@@ -48,7 +44,7 @@ export class PieChartComponent implements OnInit {
 
     // Creamos la gráfica
     const canvas = this.renderer.createElement('canvas');
-    this.renderer.setAttribute(canvas, 'id', 'lineChart');
+    this.renderer.setAttribute(canvas, 'id', this.nameTab+'PieChart');
   
     // Añadimos el canvas al div con id "chartContainer"
     const container = this.el.nativeElement.querySelector('#contenedor-piechart');
@@ -61,11 +57,4 @@ export class PieChartComponent implements OnInit {
     });
   }
 
-  private destroyChart() {
-    // Destruir el gráfico si existe
-    if (this.chart) {
-      this.chart.destroy();
-    }
-  }
- 
 }

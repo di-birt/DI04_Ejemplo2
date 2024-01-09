@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Tab4Page implements OnInit {
 
+  nombreTab: string = "tab4";
   constructor() { }
 
   ngOnInit() {
